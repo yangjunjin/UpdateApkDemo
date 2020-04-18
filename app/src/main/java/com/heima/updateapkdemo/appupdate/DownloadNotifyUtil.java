@@ -1,10 +1,13 @@
-package com.heima.updateapkdemo;
+package com.heima.updateapkdemo.appupdate;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 
 import androidx.core.app.NotificationCompat;
+
+import com.heima.updateapkdemo.App;
+import com.heima.updateapkdemo.R;
 
 
 /**

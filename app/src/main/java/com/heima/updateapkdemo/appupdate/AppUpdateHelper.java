@@ -1,4 +1,4 @@
-package com.heima.updateapkdemo;
+package com.heima.updateapkdemo.appupdate;
 
 import android.content.Context;
 import android.text.TextUtils;
