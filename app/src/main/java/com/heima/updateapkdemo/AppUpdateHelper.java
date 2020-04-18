@@ -34,18 +34,25 @@ public class AppUpdateHelper {
      * @param apkUrl
      * @return
      */
+
     public AppUpdateHelper(Context context, String apkUrl) {
+        init(context, apkUrl, null);
+    }
+
+    public AppUpdateHelper init(Context context, String apkUrl, onDownLoadListener listener) {
+        mListener = listener;
         mContext = context;
         mDownLoadUrl = apkUrl;
         mFolderPath = context.getExternalCacheDir().getPath();
         mApkPath = mFolderPath + File.separator + getFileName();
         FileDownloader.setup(mContext);
+        return this;
     }
 
     private String getFileName() {
         String name = "";
         if (!TextUtils.isEmpty(mDownLoadUrl))
-            name = mDownLoadUrl.substring(mDownLoadUrl.lastIndexOf("/"), mDownLoadUrl.length());
+            name = mDownLoadUrl.substring(mDownLoadUrl.lastIndexOf("/"));
         return name;
     }
 
@@ -60,7 +67,7 @@ public class AppUpdateHelper {
 
         //判断apk是否存在，如果存在删除
         File apkFile = new File(mApkPath);
-        if(apkFile.exists())
+        if (apkFile.exists())
             apkFile.delete();
 
         //每次重新下载需要清除上次的任务
@@ -80,7 +87,8 @@ public class AppUpdateHelper {
                     @Override
                     protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
                         super.pending(task, soFarBytes, totalBytes);
-                        Toast.makeText(mContext, "准备下载", Toast.LENGTH_SHORT).show();
+                        if(mListener!=null) mListener.pending();
+                        Toast.makeText(mContext, "开始下载", Toast.LENGTH_SHORT).show();
                         Log.e(TAG, "pending");
                     }
 
@@ -88,7 +96,8 @@ public class AppUpdateHelper {
                     @Override
                     protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
                         super.progress(task, soFarBytes, totalBytes);
-                        Log.e(TAG, "progress="+String.format("sofar: %fM total: %fM", soFarBytes / (1024 * 1024.0), totalBytes / (1024 * 1024.0)));
+                        if(mListener!=null) mListener.progress(soFarBytes, totalBytes);
+                        Log.e(TAG, "progress=" + String.format("sofar: %fM total: %fM", soFarBytes / (1024 * 1024.0), totalBytes / (1024 * 1024.0)));
 
                         if (totalBytes == -1) {
                             //speedTv.setText(String.format("sofar: %fM total: %fM", soFarBytes / (1024 * 1024.0), totalBytes / (1024 * 1024.0)));
@@ -99,6 +108,7 @@ public class AppUpdateHelper {
                     @Override
                     protected void completed(BaseDownloadTask task) {
                         super.completed(task);
+                        if(mListener!=null) mListener.completed(mApkPath);
                         Log.e(TAG, "completed");
                         Toast.makeText(mContext, "下载完成", Toast.LENGTH_SHORT).show();
                         //下载完成删除这个任务
@@ -109,13 +119,14 @@ public class AppUpdateHelper {
                     @Override
                     protected void error(BaseDownloadTask task, Throwable e) {
                         super.error(task, e);
+                        if(mListener!=null) mListener.error();
                         //下载出错，重新下载
                         Log.e(TAG, "error");
                         FileDownloader.getImpl().clear(downloadId, mDownLoadUrl);
                         try {
                             if (retryLoad) {
                                 retryLoad = false;
-                                downloadId = createDownloadTask().start();
+                                start();
                             }
                             e.printStackTrace();
                         } catch (Exception e1) {
@@ -124,5 +135,22 @@ public class AppUpdateHelper {
                     }
 
                 });
+    }
+
+
+    onDownLoadListener mListener;
+
+    public void setonDownLoadListener(onDownLoadListener listener) {
+        this.mListener = listener;
+    }
+
+    public interface onDownLoadListener {
+        void pending();//开始下载
+
+        void progress(int currentBytes, int totalBytes);//下载进度
+
+        void completed(String apkPath);//下载完成
+
+        void error();//下载出错
     }
 }
