@@ -36,17 +36,11 @@ public class AppUpdateHelper {
      */
 
     public AppUpdateHelper(Context context, String apkUrl) {
-        init(context, apkUrl, null);
-    }
-
-    public AppUpdateHelper init(Context context, String apkUrl, onDownLoadListener listener) {
-        mListener = listener;
         mContext = context;
         mDownLoadUrl = apkUrl;
         mFolderPath = context.getExternalCacheDir().getPath();
         mApkPath = mFolderPath + File.separator + getFileName();
         FileDownloader.setup(mContext);
-        return this;
     }
 
     private String getFileName() {
@@ -138,10 +132,11 @@ public class AppUpdateHelper {
     }
 
 
-    onDownLoadListener mListener;
+    public onDownLoadListener mListener;
 
-    public void setonDownLoadListener(onDownLoadListener listener) {
+    public AppUpdateHelper setonDownLoadListener(onDownLoadListener listener) {
         this.mListener = listener;
+        return this;
     }
 
     public interface onDownLoadListener {
