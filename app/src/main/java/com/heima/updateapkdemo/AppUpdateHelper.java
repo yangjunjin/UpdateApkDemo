@@ -92,7 +92,8 @@ public class AppUpdateHelper {
                         super.progress(task, soFarBytes, totalBytes);
                         if(mListener!=null) mListener.progress(soFarBytes, totalBytes);
                         Log.e(TAG, "progress=" + String.format("sofar: %fM total: %fM", soFarBytes / (1024 * 1024.0), totalBytes / (1024 * 1024.0)));
-
+                        int progress = (int) ((soFarBytes/(totalBytes*1.0))*100);
+                        DownloadNotifyUtil.getInstance().showDownloadProgress(progress);
                         if (totalBytes == -1) {
                             //speedTv.setText(String.format("sofar: %fM total: %fM", soFarBytes / (1024 * 1024.0), totalBytes / (1024 * 1024.0)));
                         }
@@ -107,6 +108,7 @@ public class AppUpdateHelper {
                         Toast.makeText(mContext, "下载完成", Toast.LENGTH_SHORT).show();
                         //下载完成删除这个任务
                         FileDownloader.getImpl().clear(downloadId, mDownLoadUrl);
+                        DownloadNotifyUtil.getInstance().hideDownloadProgress();
                     }
 
                     //下载失败
@@ -116,6 +118,7 @@ public class AppUpdateHelper {
                         if(mListener!=null) mListener.error();
                         //下载出错，重新下载
                         Log.e(TAG, "error");
+                        DownloadNotifyUtil.getInstance().hideDownloadProgress();
                         FileDownloader.getImpl().clear(downloadId, mDownLoadUrl);
                         try {
                             if (retryLoad) {
