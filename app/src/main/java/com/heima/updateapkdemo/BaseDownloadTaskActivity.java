@@ -41,7 +41,7 @@ public class BaseDownloadTaskActivity extends AppCompatActivity {
             }
         });
 
-    }
+    }  //
 
 
     private void startDownload() {
