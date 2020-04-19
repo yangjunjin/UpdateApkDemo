@@ -63,9 +63,6 @@ public class AppUpdateHelper {
         File apkFile = new File(mApkPath);
         if (apkFile.exists())
             apkFile.delete();
-
-        //每次重新下载需要清除上次的任务
-        FileDownloader.getImpl().clear(downloadId, mDownLoadUrl);
         downloadId = createDownloadTask().start();
     }
 
@@ -119,6 +116,7 @@ public class AppUpdateHelper {
                         //下载出错，重新下载
                         Log.e(TAG, "error");
                         DownloadNotifyUtil.getInstance().hideDownloadProgress();
+                        //每次重新下载需要清除上次的任务
                         FileDownloader.getImpl().clear(downloadId, mDownLoadUrl);
                         try {
                             if (retryLoad) {

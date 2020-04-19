@@ -80,11 +80,12 @@ public class HelperActivity extends AppCompatActivity {
             }
 
             @Override
-            public void completed(String apkPath) {
+            public void completed(final String apkPath) {
                 Log.e(TAG, "completed。。。。");
                 progress.setText("apk路径=" + apkPath);
-                String appid="com.heima.updateapkdemo";
+                final String appid="com.heima.updateapkdemo";
                 AndroidUtil.installApk(HelperActivity.this,appid,apkPath);
+
             }
 
             @Override
