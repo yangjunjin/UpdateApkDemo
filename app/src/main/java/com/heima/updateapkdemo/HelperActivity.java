@@ -85,7 +85,6 @@ public class HelperActivity extends AppCompatActivity {
                 progress.setText("apk路径=" + apkPath);
                 String appid="com.heima.updateapkdemo";
                 AndroidUtil.installApk(HelperActivity.this,appid,apkPath);
-//                installApk(HelperActivity.this,apkPath);
             }
 
             @Override
@@ -94,24 +93,7 @@ public class HelperActivity extends AppCompatActivity {
             }
         }).start();
     }
-    public static void installApk(Context context,String filePath) {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            File file = new File(filePath);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { // 7.0+以上版本com.heima.updateapkdemo.FileProvider
-                Uri apkUri = FileProvider.getUriForFile(context, "com.heima.updateapkdemo.FileProvider", file); //与manifest中定义的provider中的authorities="cn.wlantv.kznk.fileprovider"保持一致
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-            } else {
-                intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-            }
-            context.startActivity(intent);
-        }catch (IllegalArgumentException e){
 
-        }
-
-    }
 
     /**
      * 申请权限返回
