@@ -34,12 +34,12 @@ public class AndroidUtil {
      * 判断是否有安装的权限
      */
     @SuppressLint("WrongConstant")
-    public static boolean hasInstallPermission(Context context) {
+    public static boolean hasInstallPermission() {
         //小于23，不需要权限
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true;
         for (int i = 0; i < permissionManifest.length; i++) {
             String permission = permissionManifest[i];
-            if (PermissionChecker.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (PermissionChecker.checkSelfPermission(App.getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
                 return false;
             }
         }

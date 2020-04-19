@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!--安装apk-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!--安装apk-->
 
     <application
         android:name=".App"
@@ -19,11 +20,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
 <!--        android:name="android.support.v4.content.FileProvider"-->
-<!--        androidx.core.content.FileProvider-->
+<!--        android:name="androidx.core.content.FileProvider"-->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.heima.updateapkdemo.FileProvider"
+
+            android:authorities="com.heima.updateapkdemo.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
